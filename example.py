@@ -4,8 +4,8 @@ pygame.init()
 window = (640, 640)
 screen = pygame.display.set_mode(window)
 background = pygame.Surface(window)
-green_img = pygame.image.load("green.png").convert()
-red_img = pygame.image.load("red.png").convert()
+green_img = pygame.image.load("assets/green.png").convert()
+red_img = pygame.image.load("assets/red.png").convert()
 WHITE = (255, 255, 255)
 
 green_img = pygame.transform.scale(
@@ -28,7 +28,7 @@ delta_time = 0.1
 
 moving = False
 
-sound = pygame.mixer.Sound("clank.wav")
+#sound = pygame.mixer.Sound("clank.wav")
 
 cycle = 0
 
@@ -36,7 +36,7 @@ while running:
     pygame.display.flip()
     if cycle == 0:
         clock.tick()
-        print(f"Clock: {clock.get_rawtime()}")
+        #print(f"Clock: {clock.get_rawtime()}")
         # print(cycle)
         for r in range(0, int(640 / 40)):
             for c in range(0, int(640 / 40)):
@@ -74,8 +74,8 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_d:
                 moving = True
-            if event.key == pygame.K_f:
-                sound.play()
+            #if event.key == pygame.K_f:
+            #    sound.play()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_d:
                 moving = False
@@ -84,7 +84,7 @@ while running:
     delta_time = clock.tick(60) / 100
     delta_time = max(0.001, min(0.1, delta_time))
 
-    cycle = (cycle + 1) % 1000
-    print(delta_time)
+    cycle = (cycle + 1) % 100
+    # print(cycle)
 
 pygame.quit()
