@@ -1,19 +1,43 @@
+"""
+TODO:
+    fix
+        lag
+        quit
+
+    td
+        hold movement
+
+    new
+        music!
+            https://www.geeksforgeeks.org/python/python-playing-audio-file-in-pygame/
+
+"""
+
 import time
 import pygame
+import sys
 
 pygame.init()
-window = (640, 640)
+height = 640
+width = 640
+window = (height, width)
 screen = pygame.display.set_mode(window)
 background = pygame.Surface(window)
 green_img = pygame.image.load("assets/green.png").convert()
 red_img = pygame.image.load("assets/red.png").convert()
 WHITE = (255, 255, 255)
 
+YELLOW = (255, 255, 0)
+Yelx = 200
+Yely = 200
+
 green_img = pygame.transform.scale(
     green_img, (green_img.get_width() * 2, green_img.get_height() * 2)
 )
 
-red_img = pygame.transform.scale(red_img, (red_img.get_width() * 2, red_img.get_height() * 2))
+red_img = pygame.transform.scale(
+    red_img, (red_img.get_width() * 2, red_img.get_height() * 2)
+)
 
 
 # pygame.draw.rect(background, (0, 255, 255), (20, 20, 20 , 20))
@@ -29,7 +53,7 @@ delta_time = 0.1
 
 moving = False
 
-#sound = pygame.mixer.Sound("clank.wav")
+# sound = pygame.mixer.Sound("clank.wav")
 
 cycle = 0
 FPS = 10
@@ -39,13 +63,13 @@ while running:
     # Comute delta time
     now = time.time_ns()
     dt = now - prev_time
-    #print(f"{now} - {prev_time} = {dt}")
+    # print(f"{now} - {prev_time} = {dt}")
     prev_time = now
     pygame.display.flip()
-    #if cycle == 0:
-    #print(f"Clock: {clock.get_rawtime()}")
-    for r in range(0, int(640 / 40)):
-        for c in range(0, int(640 / 40)):
+    # if cycle == 0:
+    # print(f"Clock: {clock.get_rawtime()}")
+    for r in range(0, int(height / 40)):
+        for c in range(0, int(width / 40)):
             if (x + r + c) % 2 == 0:
                 # print(f"EVEN:  {x} {r} {c}")
                 screen.blit(green_img, (r * 40, c * 40))
@@ -54,6 +78,8 @@ while running:
                 # print(f"ODD:  {x} {r} {c}")
                 screen.blit(red_img, (r * 40, c * 40))
                 screen.blit(green_img, (r * 40, (c + 1) * 40))
+
+    pygame.draw.rect(screen, YELLOW, (Yelx, Yely, 38, 38))
     cycle = 0
     x = 1 if x == 0 else 0
 
@@ -77,10 +103,27 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        # wasd move w,s,a,d
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_d:
+            if event.key == pygame.K_w:
+                if Yely >= 40:
+                    Yely -= 40
                 moving = True
-            #if event.key == pygame.K_f:
+            if event.key == pygame.K_s:
+                if Yely <= width - 80:
+                    Yely += 40
+                moving = True
+            if event.key == pygame.K_a:
+                if Yelx >= 40:
+                    Yelx -= 40
+                moving = True
+            if event.key == pygame.K_d:
+                if Yelx <= width - 80:
+                    Yelx += 40
+                moving = True
+
+            # if event.key == pygame.K_f:
             #    sound.play()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_d:
@@ -94,4 +137,6 @@ while running:
     clock.tick(1)
     # print(cycle)
 
+# sys.exit()
+pygame.display.quit()
 pygame.quit()
