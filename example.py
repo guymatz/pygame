@@ -1,3 +1,4 @@
+import time
 import pygame
 
 pygame.init()
@@ -23,7 +24,7 @@ pygame.display.update()
 running = True
 x = 0
 clock = pygame.time.Clock()
-
+prev_time = time.time_ns()
 delta_time = 0.1
 
 moving = False
@@ -31,25 +32,30 @@ moving = False
 #sound = pygame.mixer.Sound("clank.wav")
 
 cycle = 0
+FPS = 10
 
 while running:
+    clock.tick(FPS)
+    # Comute delta time
+    now = time.time_ns()
+    dt = now - prev_time
+    #print(f"{now} - {prev_time} = {dt}")
+    prev_time = now
     pygame.display.flip()
-    if cycle == 0:
-        clock.tick()
-        #print(f"Clock: {clock.get_rawtime()}")
-        # print(cycle)
-        for r in range(0, int(640 / 40)):
-            for c in range(0, int(640 / 40)):
-                if (x + r + c) % 2 == 0:
-                    # print(f"EVEN:  {x} {r} {c}")
-                    screen.blit(green_img, (r * 40, c * 40))
-                    screen.blit(red_img, (r * 40, (c + 1) * 40))
-                else:
-                    # print(f"ODD:  {x} {r} {c}")
-                    screen.blit(red_img, (r * 40, c * 40))
-                    screen.blit(green_img, (r * 40, (c + 1) * 40))
-        cycle = 0
-        x = 1 if x == 0 else 0
+    #if cycle == 0:
+    #print(f"Clock: {clock.get_rawtime()}")
+    for r in range(0, int(640 / 40)):
+        for c in range(0, int(640 / 40)):
+            if (x + r + c) % 2 == 0:
+                # print(f"EVEN:  {x} {r} {c}")
+                screen.blit(green_img, (r * 40, c * 40))
+                screen.blit(red_img, (r * 40, (c + 1) * 40))
+            else:
+                # print(f"ODD:  {x} {r} {c}")
+                screen.blit(red_img, (r * 40, c * 40))
+                screen.blit(green_img, (r * 40, (c + 1) * 40))
+    cycle = 0
+    x = 1 if x == 0 else 0
 
     #    screen.blit(potato_img, (x, 30))
     #
@@ -85,6 +91,7 @@ while running:
     delta_time = max(0.001, min(0.1, delta_time))
 
     cycle = (cycle + 1) % 100
+    clock.tick(1)
     # print(cycle)
 
 pygame.quit()
