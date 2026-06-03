@@ -25,9 +25,11 @@ screen = pygame.display.set_mode(window)
 background = pygame.Surface(window)
 green_img = pygame.image.load("assets/green.png").convert()
 red_img = pygame.image.load("assets/red.png").convert()
-WHITE = (255, 255, 255)
+wall_bump_audio = pygame.mixer.Sound("assets/martial-arts-fast-punch.wav")
 
+WHITE = (255, 255, 255)
 YELLOW = (255, 255, 0)
+
 Yelx = 200
 Yely = 200
 
@@ -58,7 +60,10 @@ moving = False
 cycle = 0
 FPS = 10
 
+OOPS = False
+
 while running:
+
     clock.tick(FPS)
     # Comute delta time
     now = time.time_ns()
@@ -101,6 +106,7 @@ while running:
     #    screen.blit(text, (300, 100))
     #
     for event in pygame.event.get():
+        print(f"Event: {event}")
         if event.type == pygame.QUIT:
             running = False
 
@@ -109,19 +115,32 @@ while running:
             if event.key == pygame.K_w:
                 if Yely >= 40:
                     Yely -= 40
+                else:
+                    OOPS = True
                 moving = True
             if event.key == pygame.K_s:
                 if Yely <= width - 80:
                     Yely += 40
+                else:
+                    OOPS = True
                 moving = True
             if event.key == pygame.K_a:
                 if Yelx >= 40:
                     Yelx -= 40
+                else:
+                    OOPS = True
                 moving = True
             if event.key == pygame.K_d:
                 if Yelx <= width - 80:
                     Yelx += 40
+                else:
+                    OOPS = True
                 moving = True
+            if OOPS:
+                wall_bump_audio.play()
+                OOPS = False
+            if event.key in [pygame.K_q,  pygame.K_ESCAPE]:
+                running = False
 
             # if event.key == pygame.K_f:
             #    sound.play()
