@@ -15,12 +15,18 @@ TODO:
 
 import time
 import pygame
-import sys
+#import sys
 
 pygame.init()
-height = 640
-width = 640
-window = (height, width)
+clock = pygame.time.Clock()
+
+HEIGHT = 640
+WIDTH = 640
+window = (HEIGHT, WIDTH)
+# Height & Width for single block
+SHEIGHT = HEIGHT / 16
+SWIDTH = WIDTH / 16
+
 screen = pygame.display.set_mode(window)
 background = pygame.Surface(window)
 green_img = pygame.image.load("assets/green.png").convert()
@@ -49,7 +55,7 @@ screen.fill(WHITE)
 pygame.display.update()
 running = True
 x = 0
-clock = pygame.time.Clock()
+
 prev_time = time.time_ns()
 delta_time = 0.1
 
@@ -70,21 +76,21 @@ while running:
     dt = now - prev_time
     # print(f"{now} - {prev_time} = {dt}")
     prev_time = now
-    pygame.display.flip()
+    # pygame.display.flip()
     # if cycle == 0:
     # print(f"Clock: {clock.get_rawtime()}")
-    for r in range(0, int(height / 40)):
-        for c in range(0, int(width / 40)):
+    for r in range(0, int(HEIGHT / SHEIGHT)):
+        for c in range(0, int(WIDTH / SWIDTH)):
             if (x + r + c) % 2 == 0:
                 # print(f"EVEN:  {x} {r} {c}")
-                screen.blit(green_img, (r * 40, c * 40))
-                screen.blit(red_img, (r * 40, (c + 1) * 40))
+                screen.blit(green_img, (r * SHEIGHT, c * SWIDTH))
+                screen.blit(red_img, (r * SHEIGHT, (c + 1) * SWIDTH))
             else:
                 # print(f"ODD:  {x} {r} {c}")
-                screen.blit(red_img, (r * 40, c * 40))
-                screen.blit(green_img, (r * 40, (c + 1) * 40))
+                screen.blit(red_img, (r * SHEIGHT, c * SWIDTH))
+                screen.blit(green_img, (r * SHEIGHT, (c + 1) * SWIDTH))
 
-    pygame.draw.rect(screen, YELLOW, (Yelx, Yely, 38, 38))
+    pygame.draw.rect(screen, YELLOW, (Yelx+2, Yely+2, SHEIGHT - 4, SWIDTH - 4))
     cycle = 0
     x = 1 if x == 0 else 0
 
@@ -113,26 +119,26 @@ while running:
         # wasd move w,s,a,d
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                if Yely >= 40:
-                    Yely -= 40
+                if Yely >= SHEIGHT:
+                    Yely -= SHEIGHT
                 else:
                     OOPS = True
                 moving = True
             if event.key == pygame.K_s:
-                if Yely <= width - 80:
-                    Yely += 40
+                if Yely <= HEIGHT - 2*SHEIGHT:
+                    Yely += SHEIGHT
                 else:
                     OOPS = True
                 moving = True
             if event.key == pygame.K_a:
-                if Yelx >= 40:
-                    Yelx -= 40
+                if Yelx >= SWIDTH:
+                    Yelx -= SWIDTH
                 else:
                     OOPS = True
                 moving = True
             if event.key == pygame.K_d:
-                if Yelx <= width - 80:
-                    Yelx += 40
+                if Yelx <= WIDTH - 2*SWIDTH:
+                    Yelx += SWIDTH
                 else:
                     OOPS = True
                 moving = True
@@ -153,7 +159,8 @@ while running:
     delta_time = max(0.001, min(0.1, delta_time))
 
     cycle = (cycle + 1) % 100
-    clock.tick(1)
+    pygame.display.update()
+    clock.tick(FPS/8)
     # print(cycle)
 
 # sys.exit()
