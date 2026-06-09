@@ -15,6 +15,8 @@ TODO:
 
 import time
 import pygame
+from debug import debug
+import colors as c
 #import sys
 
 pygame.init()
@@ -51,7 +53,7 @@ red_img = pygame.transform.scale(
 # pygame.draw.rect(background, (0, 255, 255), (20, 20, 20 , 20))
 # pygame.draw.rect(background, (255,0,  255), (120, 120, 50 , 50))
 screen.blit(background, (0, 0))
-screen.fill(WHITE)
+screen.fill(c.WHITE)
 pygame.display.update()
 running = True
 x = 0
@@ -64,7 +66,7 @@ moving = False
 # sound = pygame.mixer.Sound("clank.wav")
 
 cycle = 0
-FPS = 10
+FPS = 30
 
 OOPS = False
 
@@ -79,18 +81,18 @@ while running:
     # pygame.display.flip()
     # if cycle == 0:
     # print(f"Clock: {clock.get_rawtime()}")
-    for r in range(0, int(HEIGHT / SHEIGHT)):
-        for c in range(0, int(WIDTH / SWIDTH)):
-            if (x + r + c) % 2 == 0:
+    for row in range(0, int(HEIGHT / SHEIGHT)):
+        for col in range(0, int(WIDTH / SWIDTH)):
+            if (x + row + col) % 2 == 0:
                 # print(f"EVEN:  {x} {r} {c}")
-                screen.blit(green_img, (r * SHEIGHT, c * SWIDTH))
-                screen.blit(red_img, (r * SHEIGHT, (c + 1) * SWIDTH))
+                screen.blit(green_img, (row * SHEIGHT, col * SWIDTH))
+                screen.blit(red_img, (row * SHEIGHT, (col + 1) * SWIDTH))
             else:
                 # print(f"ODD:  {x} {r} {c}")
-                screen.blit(red_img, (r * SHEIGHT, c * SWIDTH))
-                screen.blit(green_img, (r * SHEIGHT, (c + 1) * SWIDTH))
+                screen.blit(red_img, (row * SHEIGHT, col * SWIDTH))
+                screen.blit(green_img, (row * SHEIGHT, (col + 1) * SWIDTH))
 
-    pygame.draw.rect(screen, YELLOW, (Yelx+2, Yely+2, SHEIGHT - 4, SWIDTH - 4))
+    pygame.draw.rect(screen, c.YELLOW, (Yelx+2, Yely+2, SHEIGHT - 4, SWIDTH - 4))
     cycle = 0
     x = 1 if x == 0 else 0
 
@@ -159,6 +161,7 @@ while running:
     delta_time = max(0.001, min(0.1, delta_time))
 
     cycle = (cycle + 1) % 100
+    debug(f"Location: {Yelx}, {Yely}")
     pygame.display.update()
     clock.tick(FPS/8)
     # print(cycle)
